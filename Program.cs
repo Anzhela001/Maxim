@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
+using System.Collections.Generic;
 
 class Program
 {
@@ -50,6 +51,14 @@ class Program
 
         // Выводим результат
         Console.WriteLine("Обработанная строка: " + result);
+
+        // Выводим информацию о повторениях символов
+        var characterCounts = CountCharacterOccurrences(result);
+        Console.WriteLine("Количество повторений каждого символа:");
+        foreach (var entry in characterCounts)
+        {
+            Console.WriteLine($"'{entry.Key}': {entry.Value}");
+        }
     }
 
     // Метод для переворачивания строки
@@ -64,5 +73,23 @@ class Program
     static bool IsValidCharacter(char c)
     {
         return c >= 'a' && c <= 'z'; // Проверка, что символ - это буква от 'a' до 'z'
+    }
+
+    // Метод для подсчёта количества повторений каждого символа
+    static Dictionary<char, int> CountCharacterOccurrences(string str)
+    {
+        var characterCounts = new Dictionary<char, int>();
+        foreach (char c in str)
+        {
+            if (characterCounts.ContainsKey(c))
+            {
+                characterCounts[c]++;
+            }
+            else
+            {
+                characterCounts[c] = 1;
+            }
+        }
+        return characterCounts;
     }
 }
