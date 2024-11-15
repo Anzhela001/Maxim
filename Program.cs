@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -59,6 +58,31 @@ class Program
         {
             Console.WriteLine($"'{entry.Key}': {entry.Value}");
         }
+
+        // Находим самую длинную подстроку, которая начинается и заканчивается на гласную
+        string longestSubstring = FindLongestVowelSubstring(result);
+        Console.WriteLine("Самая длинная подстрока, начинающаяся и заканчивающаяся на гласную: " +
+                          (longestSubstring.Length > 0 ? longestSubstring : "не найдена"));
+
+        // Сортировка строки
+        Console.WriteLine("Выберите метод сортировки: 1 - Быстрая сортировка, 2 - Сортировка деревом");
+        int choice = int.Parse(Console.ReadLine());
+        string sortedResult;
+
+        if (choice == 1)
+        {
+            sortedResult = Quicksort(result);
+            Console.WriteLine("Отсортированная строка (Быстрая сортировка): " + sortedResult);
+        }
+        else if (choice == 2)
+        {
+            sortedResult = TreeSort(result);
+            Console.WriteLine("Отсортированная строка (Сортировка деревом): " + sortedResult);
+        }
+        else
+        {
+            Console.WriteLine("Неверный выбор метода сортировки.");
+        }
     }
 
     // Метод для переворачивания строки
@@ -91,5 +115,56 @@ class Program
             }
         }
         return characterCounts;
+    }
+
+    // Метод для поиска самой длинной подстроки, начинающейся и заканчивающейся на гласную
+    static string FindLongestVowelSubstring(string str)
+    {
+        HashSet<char> vowels = new HashSet<char> { 'a', 'e', 'i', 'o', 'u', 'y' };
+        int maxLength = 0;
+        string longestSubstring = "";
+
+        for (int i = 0; i < str.Length; i++)
+        {
+            if (vowels.Contains(str[i]))
+            {
+                for (int j = str.Length - 1; j > i; j--)
+                {
+                    if (vowels.Contains(str[j]))
+                    {
+                        int length = j - i + 1;
+                        if (length > maxLength)
+                        {
+                            maxLength = length;
+                            longestSubstring = str.Substring(i, length);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        return longestSubstring;
+    }
+
+    // Реализация быстрой сортировки
+    static string Quicksort(string str)
+    {
+        if (str.Length <= 1)
+            return str;
+
+        char pivot = str[str.Length / 2];
+        var less = str.Where(x => x < pivot).ToArray();
+        var equal = str.Where(x => x == pivot).ToArray();
+        var greater = str.Where(x => x > pivot).ToArray();
+
+        return new string(Quicksort(new string(less)) + new string(equal) + Quicksort(new string(greater)));
+    }
+
+    // Реализация сортировки деревом
+    static string TreeSort(string str)
+    {
+        SortedSet<char> sortedSet = new SortedSet<char>(str);
+        return new string(sortedSet.ToArray());
     }
 }
